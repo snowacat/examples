@@ -1,0 +1,23 @@
+.row.main-navigation
+  -@links.each_with_index do |s, index|
+    -if s.parent_id.nil? && index < 5 # 5 - count parent elements
+      .large-2.columns-5.left-side
+        =link_to service_path(s.url_slug), class: 'parent-url'
+          =s.slug
+          i.fa.fa-arrow-circle-down
+        -if s.children.first.present?
+          ul.main-navigation
+            -s.children.each do |c|
+              li.child-url =link_to c.slug, service_child_path(service_id: s.url_slug, id: c.url_slug)
+
+.row.main-navigation.second-line
+  -@links.drop(5).each_with_index do |s, index|
+    -if s.parent_id.nil? && index < 5 # 5 - count parent elements
+      .large-2.columns-5.left-side
+        =link_to service_path(s.url_slug), class: 'parent-url'
+          =s.slug
+          i.fa.fa-arrow-circle-down
+        -if s.children.first.present?
+          ul
+            -s.children.each do |c|
+              li.child-url =link_to c.slug, service_child_path(service_id: s.url_slug, id: c.url_slug)

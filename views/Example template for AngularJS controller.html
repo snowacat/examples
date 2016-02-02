@@ -1,0 +1,252 @@
+<div layout="row" class="user-details-wrapper">
+  <div flex="26" class="general">
+    <p class="user-name" ng-if="isCurrentUser">My profile: {{userBackup.full_name}}</p>
+    <p class="user-name" ng-if="!isCurrentUser">Profile: {{userBackup.full_name}}</p>
+    <div class="user-photo">
+      <img ngf-src="$root.userPhoto"/>
+    </div>
+    <form name="userProfileForm" ng-show="isCurrentUser">
+      <md-button class="md-raised upload-btn"
+                 type="file"
+                 name="file"
+                 ngf-select="uploadFiles($file, $invalidFiles)"
+                 ngf-accept="'image/jpeg'"
+                 ngf-pattern="'.jpg,.jpeg'"
+                 ngf-max-height="350"
+                 ngf-max-width="350"
+                 ngf-max-size="1MB"
+                 ng-model="currentUser.newPhoto"
+                 aria-label="Upload">
+        <md-icon class="material-icons">&#xE2C6;</md-icon>
+        Upload
+      </md-button>
+      <div class="validation-messages image-validation" ng-messages="userProfileForm.file.$error">
+        <div ng-message="pattern">Not a photo</div>
+        <div ng-message="maxHeight">Max height is 350 px</div>
+        <div ng-message="maxWidth">Max width is 350 px</div>
+        <div ng-message="maxSize">Max file size is 1MB</div>
+      </div>
+    </form>
+    <div layout="row" class="user-profile-wrapper">
+      <div flex=40 class="user-data">
+        <p>Status</p>
+        <p ng-hide="isAdmin && isCurrentUser">User Rating</p>
+        <p ng-hide="isAdmin && isCurrentUser">Member Since</p>
+      </div>
+      <div flex="60" class="user-data">
+        <p><span class="user-status">Active</span></p>
+        <p ng-hide="isAdmin && isCurrentUser" class="rating"><sb-rate-it ng-model="currentUser.rating.readonly" read-only="currentUser.rating.readonly_enables"></sb-rate-it></p>
+        <p ng-hide="isAdmin && isCurrentUser">{{currentUser.created_at | date:'MMM d, y'}}</p>
+      </div>
+    </div>
+  </div>
+  <div flex class="general">
+    <div ng-cloak>
+      <md-content>
+        <md-tabs md-dynamic-height md-border-bottom>
+          <md-tab label="Account Settings">
+            <md-content class="md-padding">
+              <h1 class="md-display-2">Account Settings</h1>
+              <form name="accountSettingsForm" ng-submit="submitAccount()" role="form" novalidate ng-init="updateSettingsData = {}">
+                <div layout-gt-sm="row">
+                  <md-input-container class="md-block" flex>
+                    <label>Enter Your Email Address</label>
+                    <input required
+                         type="email"
+                         name="email"
+                         ng-model="currentUser.email"
+                         autocomplete="off"
+                         ng-pattern="/^.+@.+\..+$/"/>
+
+                    <div ng-messages="accountSettingsForm.email.$error" role="alert">
+                      <div ng-if="accountSettingsForm.email.$dirty">
+                        <div ng-message="required">This is required</div>
+                        <div ng-message-exp="['pattern', 'email']">
+                          Invalid e-mail
+                        </div>
+                        <div ng-message="pattern">Invalid e-mail</div>
+                      </div>
+                    </div>
+                  </md-input-container>
+                </div>
+
+                <div layout-gt-sm="row">
+                  <md-input-container class="md-block username-field" flex>
+                    <label>Username</label>
+                    <input name="username"
+                         ng-model="currentUser.username"
+                         required="required"
+                         ng-pattern="/^[\-_a-zA-Z0-9\.]*$/"
+                         ng-minlength="2"
+                         ng-maxlength="30">
+
+                    <div ng-messages="accountSettingsForm.username.$error" role="alert">
+                      <div ng-if="accountSettingsForm.username.$dirty">
+                        <div ng-message="required">This is required</div>
+                        <div ng-message-exp="['minlength', 'maxlength', 'pattern']">
+                          Only following symbols are allowed: a-zA-Z0-9 and a '.', 2-30 characters are required
+                        </div>
+                      </div>
+                    </div>
+                  </md-input-container>
+                </div>
+
+                <div layout="row">
+                  <md-input-container class="change-password-switch" ng-click="clearPasswordFields()">
+                    <md-switch ng-model="isChangePassword">Change Password</md-switch>
+                  </md-input-container>
+                </div>
+                <div class="password-fields" ng-show="isChangePassword">
+                  <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex>
+                      <label>Password</label>
+                      <input type="password"
+                           name="password"
+                           ng-model="currentUser.password"
+                           required="required"
+                           ng-pattern="/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])^\S+$/"
+                           ng-minlength="8"
+                           ng-maxlength="20"
+                           class="form-control">
+
+                      <div ng-messages="accountSettingsForm.password.$error" role="alert">
+                        <div ng-if="accountSettingsForm.password.$dirty">
+                          <div ng-message="required">This is required</div>
+                          <div ng-message-exp="['minlength']">
+                            Password should have at least 8 characters
+                          </div>
+                          <div ng-message-exp="['maxlength']">
+                            Password should have not more 20 characters
+                          </div>
+                          <div ng-message="pattern">
+                            Password must contain at least one numeric character, one uppercase character and cannot contain spaces
+                          </div>
+                        </div>
+                      </div>
+                    </md-input-container>
+                  </div>
+
+                  <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex>
+                      <label>Confirm Password</label>
+                      <input type="password"
+                           name="passwordConfirmation"
+                           ng-model="currentUser.passwordConfirmation"
+                           required="required"
+                           class="form-control"
+                           sb-compare-to="currentUser.password">
+                      <div ng-messages="accountSettingsForm.passwordConfirmation.$error" role="alert">
+                        <div ng-if="accountSettingsForm.passwordConfirmation.$dirty">
+                          <div ng-message="required">This is required</div>
+                          <div ng-message="compareTo">Passwords don't match</div>
+                        </div>
+                      </div>
+                    </md-input-container>
+                  </div>
+
+                  <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex>
+                      <label>Current Password</label>
+                      <input type="password"
+                             name="currentPassword"
+                             ng-model="currentUser.currentPassword"
+                             required="required"
+                             class="form-control">
+                      <div ng-messages="accountSettingsForm.currentPassword.$error" role="alert">
+                        <div ng-if="accountSettingsForm.currentPassword.$dirty">
+                          <div ng-message="required">This is required</div>
+                        </div>
+                      </div>
+                    </md-input-container>
+                  </div>
+                </div>
+
+                <div class="errors-wrapper">
+                  <p ng-repeat="value in messages track by $index">{{value}}</p>
+                </div>
+
+                <md-content class="text-right" ng-show="isCurrentUser">
+                  <md-button class="md-raised" type="submit" aria-label="Update" ng-disabled="isAccountSettingsFormInvalid()">
+                    Update
+                  </md-button>
+                  <md-button class="md-raised" aria-label="Cancel" ng-click="resetSettingsData()">
+                    Cancel
+                  </md-button>
+                </md-content>
+              </form>
+            </md-content>
+          </md-tab>
+          <md-tab label="Profile Settings">
+            <md-content class="md-padding">
+              <h1 class="md-display-2">Profile Settings</h1>
+              <form name="profileSettingsForm" ng-submit="submitProfile()" role="form" novalidate ng-init="updateProfileData = {}">
+                <div layout-gt-sm="row" ng-hide="isVerifiedMerchant && isCurrentUser">
+                  <md-input-container class="md-block" flex>
+                    <label>Full name</label>
+                    <input name="fullname"
+                         ng-model="currentUser.full_name"
+                         required="required"
+                         ng-pattern="/^[a-zA-Z0-9\.+\s]*$/"
+                         ng-minlength="2"
+                         ng-maxlength="30">
+
+                    <div ng-messages="profileSettingsForm.fullname.$error" role="alert">
+                      <div ng-if="profileSettingsForm.fullname.$dirty">
+                        <div ng-message="required">This is required</div>
+                        <div ng-message-exp="['minlength', 'maxlength']">
+                          2-30 characters are required
+                        </div>
+                        <div ng-message="pattern">Only following symbols are allowed: a-zA-Z0-9 and a '.'</div>
+                      </div>
+                    </div>
+                  </md-input-container>
+                </div>
+
+                <div ng-hide="isVerifiedMerchant && isCurrentUser" layout-gt-sm="row" class="gender-div">
+                  <p>Gender</p>
+                  <md-radio-group ng-model="currentUser.gender">
+                    <md-radio-button value="male" class="md-primary">Male</md-radio-button>
+                    <md-radio-button value="female" class="md-primary">Female </md-radio-button>
+                    <md-radio-button value="dontcare" class="md-primary">Don't Care</md-radio-button>
+                  </md-radio-group>
+                </div>
+
+                <div ng-hide="isVerifiedMerchant && isCurrentUser" class="dob-wrapper">
+                  <div layout-gt-xs="row" class="user-dob">
+                    <md-datepicker name="dateField"
+                                   ng-model="currentUser.dob"
+                                   md-placeholder="Birthday"
+                                   md-min-date="minDate"
+                                   md-max-date="maxDate">
+                    </md-datepicker>
+                  </div>
+                  <div class="validation-messages" ng-messages="profileSettingsForm.dateField.$error">
+                    <div ng-message="valid">Only date is allowed</div>
+                    <div ng-message="mindate">Date is too early</div>
+                    <div ng-message="maxdate">Date is too late</div>
+                  </div>
+                </div>
+
+                <div layout-gt-sm="row">
+                  <md-input-container class="md-block" flex>
+                    <label>User Role</label>
+                    <input ng-model="currentUser.role" disabled>
+                  </md-input-container>
+                </div>
+
+                <md-content class="text-right" ng-show="isCurrentUser">
+                  <md-button class="md-raised" type="submit" aria-label="Update" ng-disabled="profileSettingsForm.$invalid">
+                    Update
+                  </md-button>
+                  <md-button class="md-raised" aria-label="Cancel" ng-click="resetProfileData()">
+                    Cancel
+                  </md-button>
+                </md-content>
+              </form>
+            </md-content>
+          </md-tab>
+        </md-tabs>
+      </md-content>
+    </div>
+  </div>
+</div>

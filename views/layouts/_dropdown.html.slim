@@ -1,0 +1,5 @@
+=content_tag :li, class: ('active' if request.original_url.include?(services_url)) do
+  = link_to 'Услуги и цены', services_path, data: {dropdown: 'menu-1', options: 'is_hover:true'}
+  #menu-1.large.f-dropdown.content.row(data-dropdown-content)
+    =render 'layouts/navigation_dropdown'
+  li.spacer

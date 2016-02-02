@@ -1,0 +1,29 @@
+.page-hero
+	.row
+		.twelve.columns
+			h1 Наши врачи
+
+.row
+	.small-12.columns
+        span.breadcrumb
+          =render_crumbs
+        .panel Особое внимание руководство Лазерной Стоматологии Новадент уделяет формированию коллектива и обучению сотрудников. Все наши специалисты являются настоящими узкопрофильными мастерами в конкретных областях стоматологии, с многолетним опытом. Каждый из них постоянно повышает свою квалификацию, в том числе и за рубежом, обновляя не только свои теоретические знания, но и совершенствуя навыки обращения с инновационным стоматологическим оборудованием, использование которого широко практикуется в нашей клинике.
+
+
+		-if @doctors
+			-@doctors.each do |d|
+				.small-3.columns
+					=image_tag d.portrait_url, class: 'portrait' if d.portrait?
+				.small-9.columns.doc-descript
+					h4.name =d.name
+
+					span.profession =d.profession
+
+					p = markdown_h(d.bio)
+                    -if d.certificates.present?
+                        h4 Сертификаты
+                        .scroller
+                            -d.certificates.each do |c|
+                                .certificate =link_to image_tag(c.image_url), (image_path(c.image_url)), data: { lightbox: c.doctor_id.to_s }
+
+				hr

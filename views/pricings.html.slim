@@ -1,0 +1,40 @@
+=render 'services/service_hero'
+
+.row
+  span.breadcrumb
+    =render_crumbs
+
+  =render 'services/service_sidebar'
+
+  .small-9.columns#service-show
+
+    h3 Цены на услугу "#{@service.title.mb_chars.downcase}"
+
+    .panel Окончательная цена лечения устанавливается только после прохождения осмотра у врача клиники Новадент.
+
+    table.service-prices
+      thead
+        tr
+          th Услуга
+          th.price-cell Стоимость
+      tbody
+        - @service.pricings.each do |pricing|
+          tr
+            td
+              span.service-name = pricing.name
+              span.service-desc = pricing.description
+
+            td.price-cell #{pricing.price} #{fa_icon "rub"}
+
+    h3 Что дальше?
+
+    ul
+      li
+        -about_path = @service.parent_id.nil? ? service_path(@service.url_slug) : service_child_path(@service.parent.url_slug, @service.url_slug)
+        =link_to 'Почитать про услугу', about_path, rel: 'nofollow'
+      li
+        -questions_path = @service.parent_id.nil? ? service_questions_path(@service.url_slug) : service_child_question_path(@service.parent.url_slug, @service.url_slug)
+        =link_to 'Почитать вопросы и ответы', questions_path, rel: 'nofollow'
+      li
+        =link_to 'Заказать обратный звонок', '#', class: 'md-trigger', data: { modal: 'modal-1' }, rel: 'nofollow'
+

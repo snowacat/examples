@@ -1,0 +1,26 @@
+footer.footer
+	.row
+        .large-4.columns
+            p
+                i.fa.fa-map-marker
+                span Санкт-Петербург, ул. Чехова 7
+            p
+                i.fa.fa-phone
+                span.bold 8 (812) 309-89-75
+                span <br/> #{content_tag(:a, 'Заказать обратный звонок', class: 'md-trigger phone-number', data: { modal: 'modal-1' }, rel: 'nofollow') }
+            p.footer-title
+                i.fa.fa-envelope
+                span hello@novadent.com
+        .large-2.columns
+            p.bold Разделы
+            ul.footer-links
+                li =link_to 'На главную', root_path, rel: 'nofollow'
+                li =link_to 'Услуги и цены', services_path, rel: 'nofollow'
+                li =link_to 'Контакты', contact_path, rel: 'nofollow'
+        .large-5.columns
+            p.bold О клинике
+            p.about Все наши специалисты являются настоящими узкопрофильными мастерами в конкретных областях стоматологии, с многолетним опытом.
+        .large-1.columns
+            =image_tag 'footer-logo.png', class: 'sway'
+    div
+        p.copyright ="2003-#{Time.now.year} © Novadent SPB"

@@ -1,0 +1,106 @@
+.user-details-wrapper {
+  .general {
+    padding: 30px;
+  }
+
+  .user-name {
+    margin-bottom: 20px;
+  }
+
+  .user-photo {
+    max-width: 350px;
+    min-width: 350px;
+    max-height: 350px;
+    min-height: 50px;
+    text-align: center;
+
+    img {
+      max-width: 350px;
+      max-height: 350px;
+    }
+  }
+
+  .user-data {
+    :nth-child(even) {
+      background-color: #F7F7F7;
+    }
+
+    p {
+      padding: 10px;
+      background-color: #E8E8E8;
+      min-height: 16px;
+    }
+
+    .rating {
+      padding-bottom: 7px;
+    }
+
+    .user-status {
+      background-color: #39AD39;
+      padding: 4px;
+      color: white;
+      border-radius: 3px;
+    }
+  }
+
+  .change-password-switch {
+    margin: 0 0 0 1px ;
+  }
+
+  .upload-btn {
+    margin: 15px auto;
+  }
+
+  .user-profile-wrapper {
+    max-width: 350px;
+  }
+
+  .gender-div {
+    p {
+      margin-right: 20px;
+    }
+  }
+
+  .dob-wrapper {
+    min-height: 67px;
+  }
+
+  .validation-messages {
+    margin: 0 0 0 0px;
+    color: rgb(221,44,0);
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .user-dob.layout-gt-xs-row {
+    min-height: 45px;
+  }
+
+  .image-validation {
+    float: right;
+    margin-top: 28px;
+    width: 68%;
+  }
+
+  md-radio-group {
+    padding-left: 1px;
+  }
+
+  md-input-container {
+    outline: none;
+  }
+
+  .errors-wrapper {
+    p {
+      color: #F44336;
+    }
+  }
+
+  .password-fields {
+    min-height: 285px;
+  }
+
+  .errors-wrapper {
+    min-height: 17px;
+  }
+}

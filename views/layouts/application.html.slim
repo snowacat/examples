@@ -1,0 +1,19 @@
+doctype html
+
+html lang="ru"
+  head
+    = render 'layouts/head'
+
+  body
+    = render 'layouts/announcement' if load_announcements.present?
+    = render 'modals/callback_modal'
+    = render 'modals/contact_form_modal'
+    .md-overlay
+    = render 'layouts/topbar'
+    .wrapper
+      = render 'static_pages/main_index_carousel' if current_page?(root_path)
+      .main-content-area
+        = yield
+      .push
+    = render 'layouts/footer'
+    a href="#" class="scrollToTop icon icon-alarm" title="Вверх"

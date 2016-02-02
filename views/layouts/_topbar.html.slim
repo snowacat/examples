@@ -1,0 +1,26 @@
+.super-top
+  .appointment-block
+    .button.tiny.top-phone.md-trigger(data-modal="modal-1") Обратный звонок
+    br
+
+  .contact-block
+    h5.phone
+      =link_to uni_addr, contact_path, title: 'Показать на карте', class: 'addr', :'data-tooltip' => 'nil'
+      =tel_to uni_phone
+
+.mega-menu
+  nav.top-bar(data-topbar)
+    section.top-bar-section
+      ul.title-area
+        li.name
+          =link_to root_path, rel: 'nofollow' do
+            =inline_svg 'svg/novadent_logo.svg', class: 'logo-novadent', alt: 'Лазерная стоматология Новадент'
+      ul.right.main-nav
+        -unless request.original_url == root_url
+          =content_tag :li do
+            =link_to 'Главная', root_path
+        =render 'layouts/dropdown'
+        =content_tag :li, class: ('active' if request.original_url == doctors_url) do
+          =link_to 'Наши врачи', doctors_path
+        =content_tag :li, class: ('active' if request.original_url == contact_url) do
+          =link_to 'Контакты', contact_path
